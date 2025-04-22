@@ -33,13 +33,9 @@ class _AuthFormState extends State<AuthForm> {
                   ),
                   SizedBox(height: 12),
                   ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor:
-                            WidgetStatePropertyAll(Colors.deepPurple)),
                     onPressed: () {},
                     child: Text(
                       'Entrar',
-                      style: TextStyle(color: Colors.white),
                     ),
                   ),
                   TextButton(
