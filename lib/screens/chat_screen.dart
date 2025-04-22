@@ -32,7 +32,11 @@ class ChatScreen extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          FirebaseFirestore.instance.collection('chat').add({
+            'text': 'Adicionado pelo app',
+          });
+        },
         child: Icon(Icons.add),
       ),
     );
