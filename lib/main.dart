@@ -19,13 +19,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Chat',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: colorSchemePers,
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             backgroundColor: colorSchemePers.primary,
             foregroundColor: Colors.white,
-          ), 
+          ),
         ),
         useMaterial3: true,
       ),
