@@ -1,11 +1,13 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:chat/models/auth_data.dart';
-import 'package:chat/utils/validations.dart';
+import 'package:chat/utils/form_validations.dart';
 import 'package:flutter/material.dart';
 
 class AuthForm extends StatefulWidget {
-  const AuthForm({super.key});
+  const AuthForm({super.key, required this.onSubmit});
+
+  final void Function(AuthData authData) onSubmit;
 
   @override
   State<AuthForm> createState() => _AuthFormState();
@@ -23,9 +25,21 @@ class _AuthFormState extends State<AuthForm> {
 
     if (!isValid) return;
 
+    //fecha o teclado
+    FocusScope.of(context).unfocus();
     _authData.name = _nameController.text.trim();
     _authData.email = _emailController.text.trim();
     _authData.password = _passwordController.text.trim();
+
+    widget.onSubmit(_authData);
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -45,22 +59,26 @@ class _AuthFormState extends State<AuthForm> {
                   children: [
                     if (!_authData.isLogin)
                       TextFormField(
+                        key: ValueKey('name'),
                         controller: _nameController,
                         decoration: InputDecoration(labelText: 'Nome'),
-                        validator: (value) => validator(value, length: 5),
+                        validator: (value) =>
+                            formFieldValidator(value, length: 5),
                       ),
                     TextFormField(
+                      key: ValueKey('email'),
                       controller: _emailController,
                       decoration: InputDecoration(labelText: 'E-Mail'),
                       validator: (value) =>
-                          validator(value, length: 7, email: true),
+                          formFieldValidator(value, length: 7, email: true),
                     ),
                     TextFormField(
+                      key: ValueKey('password'),
                       obscureText: true,
                       controller: _passwordController,
                       decoration: InputDecoration(labelText: 'Senha'),
                       validator: (value) =>
-                          validator(value, length: 5, password: true),
+                          formFieldValidator(value, length: 5, password: true),
                     ),
                     SizedBox(height: 12),
                     AnimatedSize(
@@ -82,7 +100,11 @@ class _AuthFormState extends State<AuthForm> {
                           }
                         });
                       },
-                      child: Text('Criar uma nova conta?'),
+                      child: Text(
+                        _authData.isLogin
+                            ? 'Criar uma nova conta?'
+                            : 'Já possui uma conta?',
+                      ),
                     )
                   ],
                 ),

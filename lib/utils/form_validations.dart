@@ -1,4 +1,5 @@
-String? validator(String? value, {int? length, bool? email, bool? password}) {
+String? formFieldValidator(String? value,
+    {int? length, bool? email, bool? password}) {
   final String? valueTrim = value?.trim();
   final RegExp emailRegexp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
   final RegExp passwordRegexp = RegExp(r'^(?=.*[A-Za-z])(?=.*\d).+$');
@@ -7,7 +8,7 @@ String? validator(String? value, {int? length, bool? email, bool? password}) {
     return 'Campo vazio';
   }
 
-  if (length != null && length < valueTrim.length) {
+  if (length != null && valueTrim.length < length) {
     return 'Mínimo de $length caractéres';
   }
 
