@@ -13,10 +13,6 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   void _handleSubmit(AuthData authData) {
-    print(authData.name);
-    print(authData.email);
-    print(authData.password);
-    print(authData.isLogin);
   }
 
   @override
