@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-void handleAuthError(BuildContext context, String error) {
+bool handleAuthError(BuildContext context, String error) {
   // Mapa que associa o código de erro a uma mensagem
   final errorMessages = {
     'invalid-email': 'O e-mail fornecido não é válido.',
@@ -11,6 +11,8 @@ void handleAuthError(BuildContext context, String error) {
     'email-already-in-use': 'Este e-mail já está em uso.',
     'weak-password': 'A senha deve ter no mínimo 6 caracteres.',
     'operation-not-allowed': 'A operação não é permitida.',
+    'too-many-requests':
+        'Número de Tentativas exedido, login temporariamente desativado',
     'undefined': 'Ocorreu um erro inesperado.',
   };
 
@@ -24,4 +26,10 @@ void handleAuthError(BuildContext context, String error) {
       duration: const Duration(seconds: 3),
     ),
   );
+
+  if (error == 'too-many-requests') {
+    return true;
+  } else {
+    return false;
+  }
 }

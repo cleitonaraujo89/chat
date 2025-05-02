@@ -5,9 +5,16 @@ import 'package:chat/utils/form_validations.dart';
 import 'package:flutter/material.dart';
 
 class AuthForm extends StatefulWidget {
-  const AuthForm({super.key, required this.onSubmit});
+  const AuthForm({
+    super.key,
+    required this.onSubmit,
+    this.isLockedOut = false,
+    this.lockoutSeconds = 0,
+  });
 
   final void Function(AuthData authData) onSubmit;
+  final bool isLockedOut;
+  final int lockoutSeconds;
 
   @override
   State<AuthForm> createState() => _AuthFormState();
@@ -21,6 +28,7 @@ class _AuthFormState extends State<AuthForm> {
   final _passwordController = TextEditingController();
 
   _submit() {
+    if (widget.isLockedOut) return;
     bool isValid = _formKey.currentState?.validate() ?? false;
 
     if (!isValid) return;
@@ -32,6 +40,12 @@ class _AuthFormState extends State<AuthForm> {
     _authData.password = _passwordController.text.trim();
 
     widget.onSubmit(_authData);
+  }
+
+  String get _formattedTimer {
+    final minutes = (widget.lockoutSeconds ~/ 60).toString().padLeft(2, '0');
+    final seconds = (widget.lockoutSeconds % 60).toString().padLeft(2, '0');
+    return '$minutes:$seconds';
   }
 
   @override
@@ -84,22 +98,26 @@ class _AuthFormState extends State<AuthForm> {
                     AnimatedSize(
                       duration: Duration(milliseconds: 400),
                       child: ElevatedButton(
-                        onPressed: _submit,
-                        child: Text(
-                          _authData.isLogin ? 'Entrar' : 'Cadastrar',
-                        ),
+                        onPressed: widget.isLockedOut ? null : _submit,
+                        child: widget.isLockedOut
+                            ? Text('Tente novamente em $_formattedTimer')
+                            : Text(
+                                _authData.isLogin ? 'Entrar' : 'Cadastrar',
+                              ),
                       ),
                     ),
                     TextButton(
-                      onPressed: () {
-                        setState(() {
-                          _authData.toggleMode();
-                          if (_authData.isLogin) {
-                            _authData.name = '';
-                            _nameController.clear();
-                          }
-                        });
-                      },
+                      onPressed: widget.isLockedOut
+                          ? null
+                          : () {
+                              setState(() {
+                                _authData.toggleMode();
+                                if (_authData.isLogin) {
+                                  _authData.name = '';
+                                  _nameController.clear();
+                                }
+                              });
+                            },
                       child: Text(
                         _authData.isLogin
                             ? 'Criar uma nova conta?'

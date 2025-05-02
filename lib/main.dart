@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:chat/screens/auth_screen.dart';
+import 'package:chat/screens/chat_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'utils/color_scheme_person.dart';
@@ -30,7 +32,14 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: AuthScreen(),
+      home: StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(), builder: (ctx, userSnapshot){
+          if (userSnapshot.hasData) {
+            return ChatScreen();
+          } else {
+            return AuthScreen();
+          }
+        }),
     );
   }
 }
