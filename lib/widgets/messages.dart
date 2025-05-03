@@ -1,0 +1,41 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+
+class Messages extends StatelessWidget {
+  const Messages({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    //faz o monitoramento constante se há mudanças no DB
+    return StreamBuilder(
+        //O Snapshot vai ordenado de acordo com a data de envio de modo decrescente
+        stream: FirebaseFirestore.instance
+            .collection('chat')
+            .orderBy('createdAt', descending: true)
+            .snapshots(),
+        //o que é recebido é atribuido ao segundo parametro (snapshot)
+        builder: (ctx, chatSnapshot) {
+          if (chatSnapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          if (chatSnapshot.hasError) {
+            return Center(child: Text('Ocorreu um erro!'));
+          }
+
+          if (!chatSnapshot.hasData || chatSnapshot.data!.docs.isEmpty) {
+            return Center(child: Text('Nenhuma mensagem ainda.'));
+          }
+
+          //pegamos o valor recebido e trabalhamos ele abaixo
+          final chatDocs = chatSnapshot.data!.docs;
+          return ListView.builder(
+            reverse: true,
+            itemCount: chatDocs.length,
+            itemBuilder: (ctx, i) => Text(chatDocs[i]['text']),
+          );
+        });
+  }
+}

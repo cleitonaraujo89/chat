@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:chat/widgets/messages.dart';
+import 'package:chat/widgets/new_message.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -46,35 +47,11 @@ class ChatScreen extends StatelessWidget {
           )
         ],
       ),
-      //faz o monitoramento constante se há mudanças no DB
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('chat').snapshots(),
-        //o que é recebido é atribuido ao segundo parametro (snapshot)
-        builder: (ctx, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator.adaptive(),
-            );
-          }
-
-          //pegamos o valor recebido e trabalhamos ele abaixo
-          final documents = snapshot.data?.docs ?? [];
-          return ListView.builder(
-            itemCount: documents.length,
-            itemBuilder: (ctx, i) => Container(
-              padding: EdgeInsets.all(8),
-              child: Text(documents[i]['text']),
-            ),
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          FirebaseFirestore.instance.collection('chat').add({
-            'text': 'Adicionado pelo app',
-          });
-        },
-        child: Icon(Icons.add),
+      body: Column(
+        children: [
+          Expanded(child: Messages()),
+          NewMessage(),
+        ],
       ),
     );
   }
