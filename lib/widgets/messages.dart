@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:chat/widgets/message_bubble.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -34,7 +35,7 @@ class Messages extends StatelessWidget {
           return ListView.builder(
             reverse: true,
             itemCount: chatDocs.length,
-            itemBuilder: (ctx, i) => Text(chatDocs[i]['text']),
+            itemBuilder: (ctx, i) => MessageBubble(message: chatDocs[i]['text']),
           );
         });
   }
