@@ -49,11 +49,13 @@ class ChatScreen extends StatelessWidget {
           )
         ],
       ),
-      body: Column(
-        children: [
-          Expanded(child: Messages(user: user)),
-          NewMessage(user: user),
-        ],
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(child: Messages(user: user)),
+            NewMessage(user: user),
+          ],
+        ),
       ),
     );
   }

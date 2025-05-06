@@ -66,7 +66,7 @@ class _AuthFormState extends State<AuthForm> {
             padding: EdgeInsets.all(16),
             child: Form(
               key: _formKey,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
+              autovalidateMode: AutovalidateMode.onUnfocus,
               child: AnimatedSize(
                 duration: Duration(milliseconds: 350),
                 child: Column(

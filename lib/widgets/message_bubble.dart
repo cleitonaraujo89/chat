@@ -3,7 +3,9 @@
 import 'package:flutter/material.dart';
 
 class MessageBubble extends StatelessWidget {
-  const MessageBubble({required this.message, required this.belongstoMe, Key? key}) : super(key: key);
+  const MessageBubble(
+      {required this.message, required this.belongstoMe, Key? key})
+      : super(key: key);
 
   final String message;
   final bool belongstoMe;
@@ -11,11 +13,22 @@ class MessageBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment:
+          belongstoMe ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
         Container(
           decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 55, 180, 230),
-            borderRadius: BorderRadius.circular(12),
+            color: belongstoMe
+                ? Color.fromARGB(255, 45, 200, 135)
+                : const Color.fromARGB(255, 55, 180, 230),
+            borderRadius: BorderRadius.only(
+              topLeft: belongstoMe ? Radius.circular(12) : Radius.circular(26),
+              topRight: belongstoMe ? Radius.circular(26) : Radius.circular(12),
+              bottomLeft:
+                  belongstoMe ? Radius.circular(12) : Radius.circular(0),
+              bottomRight:
+                  belongstoMe ? Radius.circular(0) : Radius.circular(12),
+            ),
           ),
           width: 140,
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),

@@ -24,14 +24,16 @@ class _NewMessageState extends State<NewMessage> {
     FocusScope.of(context).unfocus();
 
     try {
-      String user = widget.user.uid;
+      String userId = widget.user.uid;
 
-      if (user.isEmpty) return;
+
+      if (userId.isEmpty) return;
 
       FirebaseFirestore.instance.collection('chat').add({
         'text': _messageController.text,
         'createdAt': Timestamp.now(),
-        'userId': user,
+        'userId': userId,
+        //'name': widget.user.
       });
       _messageController.clear();
     } catch (e) {
