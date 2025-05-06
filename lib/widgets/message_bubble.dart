@@ -4,10 +4,14 @@ import 'package:flutter/material.dart';
 
 class MessageBubble extends StatelessWidget {
   const MessageBubble(
-      {required this.message, required this.belongstoMe, Key? key})
+      {required this.message,
+      required this.userName,
+      required this.belongstoMe,
+      Key? key})
       : super(key: key);
 
   final String message;
+  final String userName;
   final bool belongstoMe;
 
   @override
@@ -33,9 +37,18 @@ class MessageBubble extends StatelessWidget {
           width: 140,
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
           margin: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-          child: Text(
-            message,
-            style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+          child: Column(
+            crossAxisAlignment:
+                belongstoMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            children: [
+              Text(userName, style: TextStyle(fontWeight: FontWeight.bold)),
+              Text(
+                message,
+                style:
+                    TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                textAlign: belongstoMe ? TextAlign.end : TextAlign.start,
+              ),
+            ],
           ),
         )
       ],

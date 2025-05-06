@@ -16,7 +16,7 @@ class NewMessage extends StatefulWidget {
 class _NewMessageState extends State<NewMessage> {
   final _messageController = TextEditingController();
 
-  void _sendMessage() {
+  Future<void> _sendMessage() async {
     final enteredText = _messageController.text.trim();
 
     if (enteredText.isEmpty) return;
@@ -25,15 +25,22 @@ class _NewMessageState extends State<NewMessage> {
 
     try {
       String userId = widget.user.uid;
-
+      final userData = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
 
       if (userId.isEmpty) return;
+
+      if (!userData.exists ||
+          userData.data() == null ||
+          userData.data()!.isEmpty) return;
 
       FirebaseFirestore.instance.collection('chat').add({
         'text': _messageController.text,
         'createdAt': Timestamp.now(),
         'userId': userId,
-        //'name': widget.user.
+        'userName': userData['name'],
       });
       _messageController.clear();
     } catch (e) {
