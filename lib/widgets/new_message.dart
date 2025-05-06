@@ -1,10 +1,13 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class NewMessage extends StatefulWidget {
-  const NewMessage({super.key});
+  const NewMessage({super.key, required this.user});
+
+  final User user;
 
   @override
   State<NewMessage> createState() => _NewMessageState();
@@ -21,9 +24,14 @@ class _NewMessageState extends State<NewMessage> {
     FocusScope.of(context).unfocus();
 
     try {
+      String user = widget.user.uid;
+
+      if (user.isEmpty) return;
+
       FirebaseFirestore.instance.collection('chat').add({
         'text': _messageController.text,
         'createdAt': Timestamp.now(),
+        'userId': user,
       });
       _messageController.clear();
     } catch (e) {

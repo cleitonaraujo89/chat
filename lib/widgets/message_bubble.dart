@@ -1,9 +1,12 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 
 class MessageBubble extends StatelessWidget {
-  const MessageBubble({super.key, required this.message});
+  const MessageBubble({required this.message, required this.belongstoMe, Key? key}) : super(key: key);
 
   final String message;
+  final bool belongstoMe;
 
   @override
   Widget build(BuildContext context) {
