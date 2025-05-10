@@ -2,6 +2,7 @@
 
 import 'package:chat/models/auth_data.dart';
 import 'package:chat/utils/form_validations.dart';
+import 'package:chat/widgets/user_image_picker.dart';
 import 'package:flutter/material.dart';
 
 class AuthForm extends StatefulWidget {
@@ -71,6 +72,7 @@ class _AuthFormState extends State<AuthForm> {
                 duration: Duration(milliseconds: 350),
                 child: Column(
                   children: [
+                    if (!_authData.isLogin) UserImagePicker(),
                     if (!_authData.isLogin)
                       TextFormField(
                         key: ValueKey('name'),
