@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:io';
+
 import 'package:chat/models/auth_data.dart';
 import 'package:chat/utils/form_validations.dart';
 import 'package:chat/widgets/user_image_picker.dart';
@@ -34,6 +36,13 @@ class _AuthFormState extends State<AuthForm> {
 
     if (!isValid) return;
 
+    if (_authData.image == null && !_authData.isLogin) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Por favor adcione a Imagem.')),
+      );
+      return;
+    }
+
     //fecha o teclado
     FocusScope.of(context).unfocus();
     _authData.name = _nameController.text.trim();
@@ -41,6 +50,10 @@ class _AuthFormState extends State<AuthForm> {
     _authData.password = _passwordController.text.trim();
 
     widget.onSubmit(_authData);
+  }
+
+  void _handlePickedImage(File image) {
+    _authData.image = image;
   }
 
   String get _formattedTimer {
@@ -72,7 +85,8 @@ class _AuthFormState extends State<AuthForm> {
                 duration: Duration(milliseconds: 350),
                 child: Column(
                   children: [
-                    if (!_authData.isLogin) UserImagePicker(),
+                    if (!_authData.isLogin)
+                      UserImagePicker(onImagePick: _handlePickedImage),
                     if (!_authData.isLogin)
                       TextFormField(
                         key: ValueKey('name'),

@@ -1,5 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
+import 'dart:io';
+
 enum AuthMode {
   LOGIN,
   SIGNUP,
@@ -9,6 +11,7 @@ class AuthData {
   String? name;
   String? email;
   String? password;
+  File? image;
   AuthMode _mode = AuthMode.LOGIN;
 
   bool get isLogin {
