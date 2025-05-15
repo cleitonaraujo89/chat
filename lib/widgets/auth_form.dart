@@ -36,7 +36,7 @@ class _AuthFormState extends State<AuthForm> {
 
     if (!isValid) return;
 
-    if (_authData.image == null && !_authData.isLogin) {
+    if (_authData.image == null && _authData.isSignup) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Por favor adcione a Imagem.')),
       );
@@ -85,9 +85,9 @@ class _AuthFormState extends State<AuthForm> {
                 duration: Duration(milliseconds: 350),
                 child: Column(
                   children: [
-                    if (!_authData.isLogin)
+                    if (_authData.isSignup)
                       UserImagePicker(onImagePick: _handlePickedImage),
-                    if (!_authData.isLogin)
+                    if (_authData.isSignup)
                       TextFormField(
                         key: ValueKey('name'),
                         controller: _nameController,

@@ -6,6 +6,7 @@ import 'package:chat/models/auth_data.dart';
 import 'package:chat/widgets/auth_form.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/auth_error_messages.dart';
@@ -43,6 +44,12 @@ class _AuthScreenState extends State<AuthScreen> {
           email: authData.email!,
           password: authData.password!,
         );
+
+        if (userCredential.user == null) return;
+
+        final ref = FirebaseStorage.instance.ref().child('user_images').child('${userCredential.user!.uid}.img');
+
+        final urlBucket = await ref.putFile(authData.image!);
 
         final registredUser = {
           'name': authData.name,

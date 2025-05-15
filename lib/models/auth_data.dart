@@ -18,6 +18,10 @@ class AuthData {
     return _mode == AuthMode.LOGIN;
   }
 
+   bool get isSignup {
+    return _mode == AuthMode.SIGNUP;
+  }
+
   void toggleMode() {
     //se _mode for login atribui SIGNUP caso contrario LOGIN
     _mode = _mode == AuthMode.LOGIN ? AuthMode.SIGNUP : AuthMode.LOGIN;
