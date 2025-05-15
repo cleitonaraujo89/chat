@@ -17,10 +17,11 @@ class UserImagePicker extends StatefulWidget {
 class _UserImagePickerState extends State<UserImagePicker> {
   File? _pickedImageFile;
 
-  Future<void> _pickImage() async {
+  Future<void> _pickImage({required ImageSource source}) async {
     final picker = ImagePicker();
 
-    final pickedImage = await picker.pickImage(source: ImageSource.camera);
+    final pickedImage =
+        await picker.pickImage(source: source, maxWidth: 150, imageQuality: 50);
 
     if (pickedImage == null) {
       return;
@@ -43,11 +44,21 @@ class _UserImagePickerState extends State<UserImagePicker> {
               : AssetImage('assets/images/login_avatar.png'),
           radius: 40,
         ),
-        TextButton.icon(
-          onPressed: _pickImage,
-          label: Text('Adcionar Imagem'),
-          icon: Icon(Icons.image),
-        )
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextButton.icon(
+              onPressed: () => _pickImage(source: ImageSource.camera),
+              label: Text('Câmera'),
+              icon: Icon(Icons.camera_alt),
+            ),
+            TextButton.icon(
+              icon: Icon(Icons.photo_library),
+              label: Text('Galeria'),
+              onPressed: () => _pickImage(source: ImageSource.gallery),
+            ),
+          ],
+        ),
       ],
     );
   }
