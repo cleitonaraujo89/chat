@@ -47,13 +47,18 @@ class _AuthScreenState extends State<AuthScreen> {
 
         if (userCredential.user == null) return;
 
-        final ref = FirebaseStorage.instance.ref().child('user_images').child('${userCredential.user!.uid}.img');
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('user_images')
+            .child('${userCredential.user!.uid}.img');
 
-        final urlBucket = await ref.putFile(authData.image!);
+        await ref.putFile(authData.image!);
+        final urlBucket = await ref.getDownloadURL();
 
         final registredUser = {
           'name': authData.name,
           'email': authData.email,
+          'imageUrl': urlBucket,
         };
 
         await FirebaseFirestore.instance
