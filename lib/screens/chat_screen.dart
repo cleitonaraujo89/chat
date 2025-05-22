@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers
 
 import 'package:chat/widgets/messages.dart';
 import 'package:chat/widgets/new_message.dart';
@@ -40,9 +40,9 @@ class ChatScreen extends StatelessWidget {
                   ),
                 )
               ],
-              onChanged: (item) {
+              onChanged: (item) async {
                 if (item == 'logout') {
-                  FirebaseAuth.instance.signOut();
+                  await FirebaseAuth.instance.signOut();
                 }
               },
             ),

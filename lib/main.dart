@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:chat/screens/auth_screen.dart';
-import 'package:chat/screens/chat_screen.dart';
 import 'package:chat/screens/splash_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -50,12 +49,9 @@ class MyApp extends StatelessWidget {
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (ctx, userSnapshot) {
-          if (userSnapshot.connectionState == ConnectionState.waiting) {
-            return SplashScreen();
-          }
           if (userSnapshot.hasData) {
             final User user = userSnapshot.data as User;
-            return ChatScreen(user: user);
+            return SplashScreen(user: user);
           } else {
             return AuthScreen();
           }

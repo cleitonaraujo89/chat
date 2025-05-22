@@ -45,9 +45,11 @@ class _NewMessageState extends State<NewMessage> {
       });
       _messageController.clear();
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao enviar mensagem. Tente novamente.')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro ao enviar mensagem. Tente novamente.')),
+        );
+      }
     }
   }
 
