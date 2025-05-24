@@ -37,9 +37,12 @@ class _ChatScreenState extends State<ChatScreen> {
     _onMessageSub = FirebaseMessaging.onMessage.listen((RemoteMessage msg) {
       final notif = msg.notification;
       if (notif != null) {
-         print('🔔 onMessage: ${notif.title} / ${notif.body}');
+        print('🔔 onMessage: ${notif.title} / ${notif.body}');
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(notif.body ?? 'Nova notificação')),
+          SnackBar(
+            content: Text(notif.body ?? 'Nova notificação'),
+            duration: Duration(seconds: 8),
+          ),
         );
       }
     });
@@ -59,7 +62,6 @@ class _ChatScreenState extends State<ChatScreen> {
       }
     });
   }
-
 
   Future<void> _loadScreen() async {
     //inicia um cronometro
