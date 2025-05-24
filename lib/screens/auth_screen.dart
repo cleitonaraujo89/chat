@@ -3,11 +3,11 @@
 import 'dart:async';
 
 import 'package:chat/models/auth_data.dart';
+import 'package:chat/providers/auth_service.dart';
 import 'package:chat/widgets/auth_form.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../utils/auth_error_messages.dart';
 
@@ -19,7 +19,6 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  final _fireBaseAuth = FirebaseAuth.instance;
   bool _isLoading = false;
   bool _tooManyRequests = false;
   int _secondsRemaining = 0;
@@ -28,43 +27,17 @@ class _AuthScreenState extends State<AuthScreen> {
   Future<void> _handleSubmit(AuthData authData) async {
     if (authData.email == null || authData.password == null) return;
 
+    final authService = Provider.of<AuthService>(context, listen: false);
+
     setState(() {
       _isLoading = true;
     });
 
-    UserCredential userCredential;
     try {
       if (authData.isLogin) {
-        userCredential = await _fireBaseAuth.signInWithEmailAndPassword(
-          email: authData.email!,
-          password: authData.password!,
-        );
+        await authService.signIn(authData);
       } else {
-        userCredential = await _fireBaseAuth.createUserWithEmailAndPassword(
-          email: authData.email!,
-          password: authData.password!,
-        );
-
-        if (userCredential.user == null) return;
-
-        final ref = FirebaseStorage.instance
-            .ref()
-            .child('user_images')
-            .child('${userCredential.user!.uid}.img');
-
-        await ref.putFile(authData.image!);
-        final urlBucket = await ref.getDownloadURL();
-
-        final registredUser = {
-          'name': authData.name,
-          'email': authData.email,
-          'imageUrl': urlBucket,
-        };
-
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(userCredential.user!.uid)
-            .set(registredUser);
+        await authService.registerNewUser(authData);
       }
     } on FirebaseAuthException catch (e) {
       //verifica se o widget ta montado para evitar erros
