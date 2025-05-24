@@ -13,7 +13,6 @@ class AuthService with ChangeNotifier {
     _firebaseAuth.authStateChanges().listen((User? user) {
       _currentUser = user;
       notifyListeners();
-      print('AuthService: User changed to: ${_currentUser?.uid ?? 'null'}');
     });
   }
 

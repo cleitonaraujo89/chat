@@ -1,9 +1,12 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers
 
+import 'dart:async';
+
 import 'package:chat/widgets/messages.dart';
 import 'package:chat/widgets/new_message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -22,11 +25,41 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   bool _loading = true;
 
+  late final StreamSubscription<RemoteMessage> _onMessageSub;
+  late final StreamSubscription<RemoteMessage> _onMessageOpenedAppSub;
+
   @override
   void initState() {
     super.initState();
     _loadScreen();
+
+    // 1) Mensagens recebidas com o app em primeiro plano
+    _onMessageSub = FirebaseMessaging.onMessage.listen((RemoteMessage msg) {
+      final notif = msg.notification;
+      if (notif != null) {
+         print('🔔 onMessage: ${notif.title} / ${notif.body}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(notif.body ?? 'Nova notificação')),
+        );
+      }
+    });
+
+    // 2) Mensagens que abrem o app (quando o usuário clica na notificação)
+    _onMessageOpenedAppSub =
+        FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage msg) {
+      print('onMessageOpenedApp: ${msg.data}');
+      // navegue para a tela desejada com base em msg.data
+    });
+
+    // 3) Verifica se o app foi aberto a partir de uma notificação enquanto estava encerrado
+    FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? msg) {
+      if (msg != null) {
+        print('🚀 getInitialMessage: ${msg.data}');
+        // trate o deep link aqui
+      }
+    });
   }
+
 
   Future<void> _loadScreen() async {
     //inicia um cronometro
@@ -53,7 +86,6 @@ class _ChatScreenState extends State<ChatScreen> {
           await precacheImage(NetworkImage(imageUrl), context);
         }
       }
-      print('Dados do chat pré-carregados para cache.');
     } catch (e) {
       print('Erro ao pré-carregar dados do chat: $e');
     } finally {
@@ -69,6 +101,13 @@ class _ChatScreenState extends State<ChatScreen> {
         _loading = false;
       });
     }
+  }
+
+  @override
+  void dispose() {
+    _onMessageSub.cancel();
+    _onMessageOpenedAppSub.cancel();
+    super.dispose();
   }
 
   @override

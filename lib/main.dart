@@ -9,10 +9,17 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'utils/color_scheme_person.dart';
 
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print("Handling a background message: ${message.messageId}");
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   await messaging.requestPermission(
     alert: true,
@@ -23,6 +30,9 @@ void main() async {
     provisional: false,
     sound: true,
   );
+
+  final token = await messaging.getToken();
+  print('FCM Token: $token');
 
   //print('User granted permission: ${settings.authorizationStatus}');
   runApp(
