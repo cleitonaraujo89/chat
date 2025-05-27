@@ -32,6 +32,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
     _loadScreen();
+    final fbm = FirebaseMessaging.instance;  
 
     // 1) Mensagens recebidas com o app em primeiro plano
     _onMessageSub = FirebaseMessaging.onMessage.listen((RemoteMessage msg) {
@@ -61,6 +62,9 @@ class _ChatScreenState extends State<ChatScreen> {
         // trate o deep link aqui
       }
     });
+
+    fbm.subscribeToTopic('chat');
+    
   }
 
   Future<void> _loadScreen() async {
