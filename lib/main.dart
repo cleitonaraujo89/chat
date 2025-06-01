@@ -36,6 +36,7 @@ void main() async {
     provisional: false,
     sound: true,
   );
+  
 
   final token = await messaging.getToken();
   print('FCM Token: $token');
